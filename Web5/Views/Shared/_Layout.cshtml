@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - приложение ASP.NET</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+        <div class="container">
+            @Html.ActionLink("Студенты", "StudentsList", "Lab2", new { area = "" }, new { @class = "navbar-brand" })
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Переключить навигацию" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <!-- Дополнительные элементы навигации могут быть добавлены здесь -->
+                </ul>
+                <ul class="navbar-nav">
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <button type="button" class="btn btn-dark ms-2" onclick="location.href='@Url.Action("Login", "Lab2")'">
+                                Вход
+                            </button>
+                        </li>
+                    }
+                    else
+                    {
+                <li class="nav-item">
+                    <span class="nav-link text-light">@User.Identity.Name</span>
+                    @*@Html.ActionLink(User.Identity.Name, "StudentsList", "Lab2", new { @class = "nav-link text-light" })*@
+                </li>
+                            <li class="nav-item">
+                                <button type="button" class="btn btn-dark ms-2" onclick="location.href='@Url.Action("Logout", "Lab2")'">
+                                    Выход
+                                </button>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container body-content">
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year - мое приложение ASP.NET</p>
+            </footer>
+        </div>
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
+    </body>
+    </html>

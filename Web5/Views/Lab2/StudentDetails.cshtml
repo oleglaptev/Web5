@@ -1,0 +1,41 @@
+﻿@model Web5.Models.Студент
+@{
+    ViewBag.Title = "StudentDetails";
+}
+
+<h2>Информация о студенте</h2>
+<h4>Студент</h4>
+<hr />
+
+<div class="container">
+    <div class="row mb-3">
+        <div class="col-md-2 fw-bold">@Html.LabelFor(m => m.Фамилия)</div>
+        <div class="col-md-4">@Html.DisplayFor(m => m.Фамилия)</div>
+        <div class="col-md-2 fw-bold">@Html.LabelFor(m => m.Имя)</div>
+        <div class="col-md-4">@Html.DisplayFor(m => m.Имя)</div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-2 fw-bold">@Html.LabelFor(m => m.Отчество)</div>
+        <div class="col-md-4">@Html.DisplayFor(m => m.Отчество)</div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-2 fw-bold">@Html.LabelFor(m => m.Пол)</div>
+        <div class="col-md-4">@(Model.Пол ? "Мужской" : "Женский")</div>
+    </div>
+        <div class="row mb-3">
+            <div class="col-md-2 fw-bold">@Html.LabelFor(m => m.Дата_рождения)</div>
+            <div class="col-md-4">@Model.Дата_рождения.ToShortDateString()</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-2 fw-bold">@Html.LabelFor(m => m.Адрес_проживания)</div>
+            <div class="col-md-10">@Html.DisplayFor(m => m.Адрес_проживания)</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-2 fw-bold">@Html.LabelFor(m => m.Уровень_владения_ИЯ)</div>
+            <div class="col-md-10">@Html.DisplayFor(m => m.Уровень_владения_ИЯ)</div>
+        </div>
+    </div>
+
+<p>
+    @Html.ActionLink("Назад", "StudentsList", null, new { @class = "btn btn-dark" })
+</p>

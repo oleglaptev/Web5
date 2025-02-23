@@ -1,0 +1,46 @@
+﻿@model Web5.Models.Студент
+@{
+    ViewBag.Title = "DeleteStudent";
+}
+
+<h2 class="text-center mt-5 fw-bold">Удаление студента</h2>
+<h3 class="text-center mb-4">Вы уверены, что хотите удалить этого студента?</h3>
+
+<div class="container mt-5">
+    <div class="card p-4 shadow">
+        <h4 class="text-center fw-bold">Студент</h4>
+        <hr />
+
+        <dl class="row">
+            <dt class="col-md-4 col-form-label fw-bold">@Html.DisplayNameFor(model => model.Фамилия)</dt>
+            <dd class="col-md-8">@Html.DisplayFor(model => model.Фамилия)</dd>
+
+            <dt class="col-md-4 col-form-label fw-bold">@Html.DisplayNameFor(model => model.Имя)</dt>
+            <dd class="col-md-8">@Html.DisplayFor(model => model.Имя)</dd>
+
+            <dt class="col-md-4 col-form-label fw-bold">@Html.DisplayNameFor(model => model.Отчество)</dt>
+            <dd class="col-md-8">@Html.DisplayFor(model => model.Отчество)</dd>
+
+            <dt class="col-md-4 col-form-label fw-bold">@Html.DisplayNameFor(model => model.Пол)</dt>
+            <dd class="col-md-8">@(Model.Пол ? "Мужской" : "Женский")</dd>
+
+            <dt class="col-md-4 col-form-label fw-bold">@Html.DisplayNameFor(model => model.Адрес_проживания)</dt>
+            <dd class="col-md-8">@Html.DisplayFor(model => model.Адрес_проживания)</dd>
+
+            <dt class="col-md-4 col-form-label fw-bold">@Html.DisplayNameFor(model => model.Дата_рождения)</dt>
+            <dd class="col-md-8">@Model.Дата_рождения.ToShortDateString()</dd>
+
+            <dt class="col-md-4 col-form-label fw-bold">@Html.DisplayNameFor(model => model.Уровень_владения_ИЯ)</dt>
+            <dd class="col-md-8">@Html.DisplayFor(model => model.Уровень_владения_ИЯ)</dd>
+        </dl>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-actions no-color text-center">
+                <input type="submit" value="Удалить" class="btn btn-dark" />
+                <a href="@Url.Action("StudentsList", "Lab2")" class="btn btn-dark ms-2">Отмена</a>
+            </div>
+        }
+    </div>
+</div>

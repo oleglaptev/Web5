@@ -1,0 +1,23 @@
+﻿@model Web5.Models.Студент
+<div class="row">
+    <div class="col-md-4 text-start">@Model.Фамилия @Model.Имя @Model.Отчество</div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="col-md-2 text-center">
+            @Model.Дата_рождения.ToShortDateString()
+            @Html.Action("AgeDisplay", new { studentId = Model.ID_студента })
+        </div>
+        <div class="col-md-2 text-center">
+            @Html.ActionLink("подробнее", "StudentDetails", new { controller = "Lab2", studentId = Model.ID_студента }, new { @class = "btn btn-link" })
+        </div>
+        if (User.IsInRole("Admin"))
+        {
+            <div class="col-md-2 text-center">
+                @Html.ActionLink("редактировать", "EditStudent", new { controller = "Lab2", studentId = Model.ID_студента }, new { @class = "btn btn-link" })
+            </div>
+            <div class="col-md-2 text-center">
+                @Html.ActionLink("удалить", "DeleteStudent", new { controller = "Lab2", studentId = Model.ID_студента }, new { @class = "btn btn-link" })
+            </div>
+        }
+    }
+</div>

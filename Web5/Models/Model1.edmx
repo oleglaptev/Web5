@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище WEBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Пользователи">
+          <Key>
+            <PropertyRef Name="ID пользователя" />
+          </Key>
+          <Property Name="ID пользователя" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Login" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="PasswordHash" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Salt" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserRole" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Роли пользователей">
+          <Key>
+            <PropertyRef Name="Код роли" />
+          </Key>
+          <Property Name="Код роли" Type="int" Nullable="false" />
+          <Property Name="Имя роли" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Студенты">
+          <Key>
+            <PropertyRef Name="ID студента" />
+          </Key>
+          <Property Name="Фамилия" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Имя" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Отчество" Type="nvarchar" MaxLength="50" />
+          <Property Name="Пол" Type="bit" Nullable="false" />
+          <Property Name="ID студента" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Адрес проживания" Type="varchar(max)" Nullable="false" />
+          <Property Name="Дата рождения" Type="date" Nullable="false" />
+          <Property Name="Уровень владения ИЯ" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ID пользователя" Type="uniqueidentifier" />
+        </EntityType>
+        <Association Name="FK_Пользователи_Роли пользователей">
+          <End Role="Роли пользователей" Type="Self.Роли пользователей" Multiplicity="1" />
+          <End Role="Пользователи" Type="Self.Пользователи" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Роли пользователей">
+              <PropertyRef Name="Код роли" />
+            </Principal>
+            <Dependent Role="Пользователи">
+              <PropertyRef Name="UserRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Студенты_Пользователи">
+          <End Role="Пользователи" Type="Self.Пользователи" Multiplicity="0..1" />
+          <End Role="Студенты" Type="Self.Студенты" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Пользователи">
+              <PropertyRef Name="ID пользователя" />
+            </Principal>
+            <Dependent Role="Студенты">
+              <PropertyRef Name="ID пользователя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище WEBModelContainer">
+          <EntitySet Name="Пользователи" EntityType="Self.Пользователи" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Роли пользователей" EntityType="Self.Роли пользователей" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Студенты" EntityType="Self.Студенты" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Пользователи_Роли пользователей" Association="Self.FK_Пользователи_Роли пользователей">
+            <End Role="Роли пользователей" EntitySet="Роли пользователей" />
+            <End Role="Пользователи" EntitySet="Пользователи" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Студенты_Пользователи" Association="Self.FK_Студенты_Пользователи">
+            <End Role="Пользователи" EntitySet="Пользователи" />
+            <End Role="Студенты" EntitySet="Студенты" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="WEBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Пользователь">
+          <Key>
+            <PropertyRef Name="ID_пользователя" />
+          </Key>
+          <Property Name="ID_пользователя" Type="Guid" Nullable="false" />
+          <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Salt" Type="Guid" Nullable="false" />
+          <Property Name="UserRole" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Роли_пользователей" Relationship="Self.FK_Пользователи_Роли_пользователей" FromRole="Пользователи" ToRole="Роли_пользователей" />
+          <NavigationProperty Name="Студенты" Relationship="Self.FK_Студенты_Пользователи" FromRole="Пользователи" ToRole="Студенты" />
+        </EntityType>
+        <EntityType Name="Роль_пользователя">
+          <Key>
+            <PropertyRef Name="Код_роли" />
+          </Key>
+          <Property Name="Код_роли" Type="Int32" Nullable="false" />
+          <Property Name="Имя_роли" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Пользователи" Relationship="Self.FK_Пользователи_Роли_пользователей" FromRole="Роли_пользователей" ToRole="Пользователи" />
+        </EntityType>
+        <EntityType Name="Студент">
+          <Key>
+            <PropertyRef Name="ID_студента" />
+          </Key>
+          <Property Name="Фамилия" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Имя" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Отчество" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Пол" Type="Boolean" Nullable="false" />
+          <Property Name="ID_студента" Type="Guid" Nullable="false" />
+          <Property Name="Адрес_проживания" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Дата_рождения" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Уровень_владения_ИЯ" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ID_пользователя" Type="Guid" />
+          <NavigationProperty Name="Пользователи" Relationship="Self.FK_Студенты_Пользователи" FromRole="Студенты" ToRole="Пользователи" />
+        </EntityType>
+        <Association Name="FK_Пользователи_Роли_пользователей">
+          <End Role="Роли_пользователей" Type="WEBModel.Роль_пользователя" Multiplicity="1" />
+          <End Role="Пользователи" Type="WEBModel.Пользователь" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Роли_пользователей">
+              <PropertyRef Name="Код_роли" />
+            </Principal>
+            <Dependent Role="Пользователи">
+              <PropertyRef Name="UserRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Студенты_Пользователи">
+          <End Role="Пользователи" Type="WEBModel.Пользователь" Multiplicity="0..1" />
+          <End Role="Студенты" Type="WEBModel.Студент" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Пользователи">
+              <PropertyRef Name="ID_пользователя" />
+            </Principal>
+            <Dependent Role="Студенты">
+              <PropertyRef Name="ID_пользователя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WEBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Пользователь" EntityType="WEBModel.Пользователь" />
+          <EntitySet Name="Роль_пользователя" EntityType="WEBModel.Роль_пользователя" />
+          <EntitySet Name="Студент" EntityType="WEBModel.Студент" />
+          <AssociationSet Name="FK_Пользователи_Роли_пользователей" Association="Self.FK_Пользователи_Роли_пользователей">
+            <End Role="Роли_пользователей" EntitySet="Роль_пользователя" />
+            <End Role="Пользователи" EntitySet="Пользователь" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Студенты_Пользователи" Association="Self.FK_Студенты_Пользователи">
+            <End Role="Пользователи" EntitySet="Пользователь" />
+            <End Role="Студенты" EntitySet="Студент" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище WEBModelContainer" CdmEntityContainer="WEBEntities">
+          <EntitySetMapping Name="Пользователь">
+            <EntityTypeMapping TypeName="WEBModel.Пользователь">
+              <MappingFragment StoreEntitySet="Пользователи">
+                <ScalarProperty Name="ID_пользователя" ColumnName="ID пользователя" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="Salt" ColumnName="Salt" />
+                <ScalarProperty Name="UserRole" ColumnName="UserRole" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Роль_пользователя">
+            <EntityTypeMapping TypeName="WEBModel.Роль_пользователя">
+              <MappingFragment StoreEntitySet="Роли пользователей">
+                <ScalarProperty Name="Код_роли" ColumnName="Код роли" />
+                <ScalarProperty Name="Имя_роли" ColumnName="Имя роли" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Студент">
+            <EntityTypeMapping TypeName="WEBModel.Студент">
+              <MappingFragment StoreEntitySet="Студенты">
+                <ScalarProperty Name="Фамилия" ColumnName="Фамилия" />
+                <ScalarProperty Name="Имя" ColumnName="Имя" />
+                <ScalarProperty Name="Отчество" ColumnName="Отчество" />
+                <ScalarProperty Name="Пол" ColumnName="Пол" />
+                <ScalarProperty Name="ID_студента" ColumnName="ID студента" />
+                <ScalarProperty Name="Адрес_проживания" ColumnName="Адрес проживания" />
+                <ScalarProperty Name="Дата_рождения" ColumnName="Дата рождения" />
+                <ScalarProperty Name="Уровень_владения_ИЯ" ColumnName="Уровень владения ИЯ" />
+                <ScalarProperty Name="ID_пользователя" ColumnName="ID пользователя" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

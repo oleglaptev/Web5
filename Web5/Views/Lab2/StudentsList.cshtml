@@ -1,0 +1,28 @@
+﻿@model List<Web5.Models.Студент>
+@{
+    ViewBag.Title = "StudentsList";
+}
+<h2>Список студентов</h2>
+<div class="row mb-3">
+    <div class="col-md-4 text-center fw-bold">ФИО</div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="col-md-2 text-center fw-bold">Дата рождения</div>
+        <div class="col-md-2 text-center fw-bold">Детали</div>
+        if (User.IsInRole("Admin"))
+        {
+            <div class="col-md-2 text-center fw-bold">Изменение</div>
+            <div class="col-md-2 text-center fw-bold">Удаление</div>
+        }
+    }
+</div>
+@foreach (var student in Model)
+{
+    @Html.Partial("StudentOverviewPartial", student)
+}
+@if (User.IsInRole("Admin"))
+{
+    <button type="button" class="btn btn-dark mt-3" onclick="location.href='@Url.Action("CreateStudent", "Lab2")'">
+        Добавить студента
+    </button>
+}
