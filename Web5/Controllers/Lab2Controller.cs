@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using System.Web.UI;
 using Web5.Models;
 using Web5.Models.ViewModels;
 
@@ -32,14 +33,16 @@ namespace Web5.Controllers
             using (var db = new WEBEntities())
             {
                 TimeSpan substractedDate = DateTime.Now.Subtract(db.Студент.Find(studentID).Дата_рождения);
+                int age = 0;
                 if (substractedDate.Days > 365)
                 {
-                    int age = substractedDate.Days / 365;
-                    ageString += age.ToString() + ")";
+                    age = substractedDate.Days / 365;
                 }
+                ageString += age.ToString() + ")";
             }
             return PartialView("AgeDisplay", ageString);
         }
+
         [Authorize]
         public ActionResult StudentDetails(Guid studentID)
         {
