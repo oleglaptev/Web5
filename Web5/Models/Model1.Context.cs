@@ -28,5 +28,7 @@ namespace Web5.Models
         public virtual DbSet<Пользователь> Пользователь { get; set; }
         public virtual DbSet<Роль_пользователя> Роль_пользователя { get; set; }
         public virtual DbSet<Студент> Студент { get; set; }
+        public virtual DbSet<Группы> Группы { get; set; }
+        public virtual DbSet<Студенты_в_группах> Студенты_в_группах { get; set; }
     }
 }

@@ -5,6 +5,18 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="Хранилище WEBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Группы">
+          <Key>
+            <PropertyRef Name="ID группы" />
+          </Key>
+          <Property Name="ID группы" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ID Инженерной школы" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Год набора" Type="int" Nullable="false" />
+          <Property Name="Длительность обучения" Type="int" Nullable="false" />
+          <Property Name="Код формы обучения" Type="int" Nullable="false" />
+          <Property Name="Код направления подготовки" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="Наименование" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="Пользователи">
           <Key>
             <PropertyRef Name="ID пользователя" />
@@ -36,6 +48,15 @@
           <Property Name="Уровень владения ИЯ" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="ID пользователя" Type="uniqueidentifier" />
         </EntityType>
+        <EntityType Name="Студенты в группах">
+          <Key>
+            <PropertyRef Name="ID студента" />
+            <PropertyRef Name="ID группы" />
+          </Key>
+          <Property Name="ID студента" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ID группы" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Код формы оплаты" Type="int" Nullable="false" />
+        </EntityType>
         <Association Name="FK_Пользователи_Роли пользователей">
           <End Role="Роли пользователей" Type="Self.Роли пользователей" Multiplicity="1" />
           <End Role="Пользователи" Type="Self.Пользователи" Multiplicity="*" />
@@ -45,6 +66,32 @@
             </Principal>
             <Dependent Role="Пользователи">
               <PropertyRef Name="UserRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Студенты в группах_Группы">
+          <End Role="Группы" Type="Self.Группы" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Студенты в группах" Type="Self.Студенты в группах" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Группы">
+              <PropertyRef Name="ID группы" />
+            </Principal>
+            <Dependent Role="Студенты в группах">
+              <PropertyRef Name="ID группы" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Студенты в группах_Студенты">
+          <End Role="Студенты" Type="Self.Студенты" Multiplicity="1" />
+          <End Role="Студенты в группах" Type="Self.Студенты в группах" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Студенты">
+              <PropertyRef Name="ID студента" />
+            </Principal>
+            <Dependent Role="Студенты в группах">
+              <PropertyRef Name="ID студента" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -61,12 +108,22 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="Хранилище WEBModelContainer">
+          <EntitySet Name="Группы" EntityType="Self.Группы" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Пользователи" EntityType="Self.Пользователи" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Роли пользователей" EntityType="Self.Роли пользователей" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Студенты" EntityType="Self.Студенты" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Студенты в группах" EntityType="Self.Студенты в группах" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Пользователи_Роли пользователей" Association="Self.FK_Пользователи_Роли пользователей">
             <End Role="Роли пользователей" EntitySet="Роли пользователей" />
             <End Role="Пользователи" EntitySet="Пользователи" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Студенты в группах_Группы" Association="Self.FK_Студенты в группах_Группы">
+            <End Role="Группы" EntitySet="Группы" />
+            <End Role="Студенты в группах" EntitySet="Студенты в группах" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Студенты в группах_Студенты" Association="Self.FK_Студенты в группах_Студенты">
+            <End Role="Студенты" EntitySet="Студенты" />
+            <End Role="Студенты в группах" EntitySet="Студенты в группах" />
           </AssociationSet>
           <AssociationSet Name="FK_Студенты_Пользователи" Association="Self.FK_Студенты_Пользователи">
             <End Role="Пользователи" EntitySet="Пользователи" />
@@ -111,6 +168,7 @@
           <Property Name="Уровень_владения_ИЯ" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="ID_пользователя" Type="Guid" />
           <NavigationProperty Name="Пользователи" Relationship="Self.FK_Студенты_Пользователи" FromRole="Студенты" ToRole="Пользователи" />
+          <NavigationProperty Name="Студенты_в_группах" Relationship="WEBModel.FK_Студенты_в_группах_Студенты" FromRole="Студент" ToRole="Студенты_в_группах" />
         </EntityType>
         <Association Name="FK_Пользователи_Роли_пользователей">
           <End Role="Роли_пользователей" Type="WEBModel.Роль_пользователя" Multiplicity="1" />
@@ -148,7 +206,67 @@
             <End Role="Пользователи" EntitySet="Пользователь" />
             <End Role="Студенты" EntitySet="Студент" />
           </AssociationSet>
+          <EntitySet Name="Группы" EntityType="WEBModel.Группы" />
+          <EntitySet Name="Студенты_в_группах" EntityType="WEBModel.Студенты_в_группах" />
+          <AssociationSet Name="FK_Студенты_в_группах_Группы" Association="WEBModel.FK_Студенты_в_группах_Группы">
+            <End Role="Группы" EntitySet="Группы" />
+            <End Role="Студенты_в_группах" EntitySet="Студенты_в_группах" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Студенты_в_группах_Студенты" Association="WEBModel.FK_Студенты_в_группах_Студенты">
+            <End Role="Студент" EntitySet="Студент" />
+            <End Role="Студенты_в_группах" EntitySet="Студенты_в_группах" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Группы">
+          <Key>
+            <PropertyRef Name="ID_группы" />
+          </Key>
+          <Property Name="ID_группы" Type="Guid" Nullable="false" />
+          <Property Name="ID_Инженерной_школы" Type="Guid" Nullable="false" />
+          <Property Name="Год_набора" Type="Int32" Nullable="false" />
+          <Property Name="Длительность_обучения" Type="Int32" Nullable="false" />
+          <Property Name="Код_формы_обучения" Type="Int32" Nullable="false" />
+          <Property Name="Код_направления_подготовки" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="Наименование" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Студенты_в_группах" Relationship="WEBModel.FK_Студенты_в_группах_Группы" FromRole="Группы" ToRole="Студенты_в_группах" />
+        </EntityType>
+        <EntityType Name="Студенты_в_группах">
+          <Key>
+            <PropertyRef Name="ID_студента" />
+            <PropertyRef Name="ID_группы" />
+          </Key>
+          <Property Name="ID_студента" Type="Guid" Nullable="false" />
+          <Property Name="ID_группы" Type="Guid" Nullable="false" />
+          <Property Name="Код_формы_оплаты" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Группы" Relationship="WEBModel.FK_Студенты_в_группах_Группы" FromRole="Студенты_в_группах" ToRole="Группы" />
+          <NavigationProperty Name="Студенты" Relationship="WEBModel.FK_Студенты_в_группах_Студенты" FromRole="Студенты_в_группах" ToRole="Студент" />
+        </EntityType>
+        <Association Name="FK_Студенты_в_группах_Группы">
+          <End Type="WEBModel.Группы" Role="Группы" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="WEBModel.Студенты_в_группах" Role="Студенты_в_группах" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Группы">
+              <PropertyRef Name="ID_группы" />
+            </Principal>
+            <Dependent Role="Студенты_в_группах">
+              <PropertyRef Name="ID_группы" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Студенты_в_группах_Студенты">
+          <End Type="WEBModel.Студент" Role="Студент" Multiplicity="1" />
+          <End Type="WEBModel.Студенты_в_группах" Role="Студенты_в_группах" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Студент">
+              <PropertyRef Name="ID_студента" />
+            </Principal>
+            <Dependent Role="Студенты_в_группах">
+              <PropertyRef Name="ID_студента" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -186,6 +304,28 @@
                 <ScalarProperty Name="Дата_рождения" ColumnName="Дата рождения" />
                 <ScalarProperty Name="Уровень_владения_ИЯ" ColumnName="Уровень владения ИЯ" />
                 <ScalarProperty Name="ID_пользователя" ColumnName="ID пользователя" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Группы">
+            <EntityTypeMapping TypeName="WEBModel.Группы">
+              <MappingFragment StoreEntitySet="Группы">
+                <ScalarProperty Name="Наименование" ColumnName="Наименование" />
+                <ScalarProperty Name="Код_направления_подготовки" ColumnName="Код направления подготовки" />
+                <ScalarProperty Name="Код_формы_обучения" ColumnName="Код формы обучения" />
+                <ScalarProperty Name="Длительность_обучения" ColumnName="Длительность обучения" />
+                <ScalarProperty Name="Год_набора" ColumnName="Год набора" />
+                <ScalarProperty Name="ID_Инженерной_школы" ColumnName="ID Инженерной школы" />
+                <ScalarProperty Name="ID_группы" ColumnName="ID группы" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Студенты_в_группах">
+            <EntityTypeMapping TypeName="WEBModel.Студенты_в_группах">
+              <MappingFragment StoreEntitySet="Студенты в группах">
+                <ScalarProperty Name="Код_формы_оплаты" ColumnName="Код формы оплаты" />
+                <ScalarProperty Name="ID_группы" ColumnName="ID группы" />
+                <ScalarProperty Name="ID_студента" ColumnName="ID студента" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

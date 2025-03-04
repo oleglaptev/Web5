@@ -10,6 +10,10 @@
         <EntityTypeShape EntityType="WEBModel.Студент" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
         <AssociationConnector Association="WEBModel.FK_Пользователи_Роли_пользователей" ManuallyRouted="false" />
         <AssociationConnector Association="WEBModel.FK_Студенты_Пользователи" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="WEBModel.Группы" Width="1.5" PointX="5.25" PointY="5.25" />
+        <EntityTypeShape EntityType="WEBModel.Студенты_в_группах" Width="1.5" PointX="7.5" PointY="1.625" />
+        <AssociationConnector Association="WEBModel.FK_Студенты_в_группах_Группы" />
+        <AssociationConnector Association="WEBModel.FK_Студенты_в_группах_Студенты" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
